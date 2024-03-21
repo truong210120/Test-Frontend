@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.Polaris-Select__SelectedOption{
+  display: none;
+}
+.Polaris-TextField__Spinner,.Polaris-Select__Content{
+  display: none;
+}
+.main{
+  background: #F1F2F4;
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.MainApp{
+  width: 1500px;
+  max-width: 100%;
+  background: #F1F2F4;
+  margin: 0 auto;
+}
