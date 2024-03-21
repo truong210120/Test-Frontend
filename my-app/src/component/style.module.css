@@ -26,9 +26,11 @@
 }
 .general input{
     padding: 10px;
-    border-radius: 4px;
     margin-top: 5px;
     width: 100%;
+}
+.general h3{
+      padding-bottom: 20px;
 }
 .general>div{
     padding-bottom: 15px;
@@ -75,14 +77,71 @@
 .ItemDiscount input{
     width: 100%;
     padding: 10px 0 10px 10px;
+    margin-top:  8px;
 }
 .ItemDiscount select{
     width: 100%;
     padding: 10px 100px 10px 10px;
+    margin-top:  8px;
 }
 .ItemDiscount .flex{
     display: flex;
     gap: 50px;
     flex-wrap: wrap;
     padding: 20px 0 80px 0;
+}
+.footer{
+      background-color: white;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+}
+.footer .btn1, .btn2{
+      padding: 20px 60px 20px 60px;
+}
+.footer .btn2{
+      padding: 0px 60px 20px 60px;
+}
+.footer button:first-of-type{
+      width: 100%;
+      padding:  6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ED4D2D;
+      color: white;
+      border-color: transparent;
+}
+.footer button:last-of-type{
+      width: 100%;
+      padding:  6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ED4D2D;
+      color: white;
+      border-color: transparent;
+}
+.footer svg{
+      width: 25px;
+      fill: white;
+
+}
+.Row{
+      display: flex;
+      gap: 30px;
+}
+.Row .tableDiscount{
+      background-color: white;
+      height: 100%;
+      padding: 30px;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      border-radius: 15px;
+}
+.Row .titleTable{
+      text-align: center;
+      padding: 30px 0 15px 0 ;
+}
+.Row .tableDiscount .tableDetail th{
+      padding: 0px 15px 0 15px;
 }
