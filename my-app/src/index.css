@@ -35,3 +35,12 @@ code {
 .Polaris-DataTable__Navigation{
       display: none;
 }
+.Polaris-TextField {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.Polaris-TextField .Polaris-TextField__Suffix{
+  position: absolute;
+  right: 15px;
+}

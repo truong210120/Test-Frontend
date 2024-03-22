@@ -80,7 +80,7 @@
     margin-top:  8px;
 }
 .ItemDiscount select{
-    width: 100%;
+    width: 185px;
     padding: 10px 100px 10px 10px;
     margin-top:  8px;
 }
@@ -143,5 +143,11 @@
       padding: 30px 0 15px 0 ;
 }
 .Row .tableDiscount .tableDetail th{
-      padding: 0px 15px 0 15px;
+    width: 120px;
+}
+.Row .tableDiscount .tableDetail tr{
+   text-align: center;
+}
+ .Row .tableDiscount .tableDetail td{
+      width: 120px;
 }

@@ -12,7 +12,12 @@ import {
   Box,
   DataTable,
 } from "@shopify/polaris";
-import { ArrowLeftIcon, DeleteIcon, PlusCircleIcon, CheckCircleIcon } from "@shopify/polaris-icons";
+import {
+  ArrowLeftIcon,
+  DeleteIcon,
+  PlusCircleIcon,
+  CheckCircleIcon,
+} from "@shopify/polaris-icons";
 import style from "./style.module.css";
 // interface FormData {
 //   campaign: string;
@@ -28,21 +33,41 @@ import style from "./style.module.css";
 //   }[];
 // }
 function DynamicForm() {
-  const { control, handleSubmit, getValues, watch, formState: { errors } } = useForm<any>();
-  const [list, setList] = useState<any>([])
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm<any>();
+  const [list, setList] = useState<any>([]);
   const { fields, append, remove } = useFieldArray({
     control,
     name: "rows",
   });
-  const values = getValues()
+  function formatAmount(amount: string, discountType: string) {
+    if (discountType === "discount") {
+      return amount + "%";
+    }
+    if (discountType === "each") {
+      return amount + "$";
+    }
+    if (discountType === "none") {
+      return null;
+    }
+    return amount;
+  }
+  const values = getValues();
   const watchRows = watch("rows");
+  const watchDesc = watch("desc");
+  const watchTitle = watch("title");
   useEffect(() => {
     // Update 'list' state whenever 'watchRows' changes
     if (watchRows && watchRows?.length > 0) {
       const updatedList = watchRows?.map((item: any) => Object.values(item));
       setList(updatedList);
     }
-  }, [watchRows, fields]);
+  }, [watchRows, fields, watchDesc, watchTitle]);
   useEffect(() => {
     append([
       {
@@ -58,16 +83,16 @@ function DynamicForm() {
 
   const onSubmit = (data: any) => {
     if (data?.rows.length > 0) {
-      const list = data?.rows?.map((item: any) => Object.values(item))
-      setList(list)
-      fetch('https://jsonplaceholder.typicode.com/posts?_limit=5')
-         .then((res) => res.json())
-         .then((data) => {
-            console.log(data);
-         })
-         .catch((err) => {
-            console.log(err.message);
-         });
+      const list = data?.rows?.map((item: any) => Object.values(item));
+      setList(list);
+      fetch("https://jsonplaceholder.typicode.com/posts?_limit=5")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
   };
   return (
@@ -93,7 +118,8 @@ function DynamicForm() {
                 <Box>
                   <Controller
                     name="campaign"
-                    rules={{ required: 'Campaign is required' }}
+                    rules={{ required: "Campaign is required" }}
+                    defaultValue="Volume discount #2"
                     control={control}
                     render={({ field }) => (
                       <TextField
@@ -105,12 +131,15 @@ function DynamicForm() {
                       />
                     )}
                   />
-                  {errors.campaign && <p style={{ color: 'red' }}>Campaign không được bỏ trống</p>}
+                  {errors.campaign && (
+                    <p style={{ color: "red" }}>Campaign không được bỏ trống</p>
+                  )}
                 </Box>
                 <Box>
                   <Controller
                     name="title"
                     control={control}
+                    defaultValue="Buy more and save"
                     render={({ field }) => (
                       <TextField
                         label="Title"
@@ -124,6 +153,7 @@ function DynamicForm() {
                 <Box>
                   <Controller
                     name="desc"
+                    defaultValue="Apply for all products in store"
                     control={control}
                     render={({ field }) => (
                       <TextField
@@ -160,18 +190,24 @@ function DynamicForm() {
                             name={`rows[${index}].titleDiscount`}
                             control={control}
                             rules={{
-                              required: 'Title is required',
+                              required: "Title is required",
                             }}
                             render={({ field, fieldState }) => (
-                              <>
+                              <div>
                                 <TextField
                                   label="Title"
                                   placeholder="Title Discount"
                                   autoComplete=""
                                   {...field}
                                 />
-                                {fieldState.error && <p style={{ color: 'red' }}>{fieldState.error.message}</p>}
-                              </>
+                                {fieldState.error && (
+                                  <p
+                                    style={{ color: "red", paddingTop: "2px" }}
+                                  >
+                                    {fieldState.error.message}
+                                  </p>
+                                )}
+                              </div>
                             )}
                           />
                           <Controller
@@ -191,7 +227,7 @@ function DynamicForm() {
                             control={control}
                             render={({ field }) => (
                               <TextField
-                                label="Label"
+                                label="Label (option)"
                                 placeholder="Enter Label"
                                 autoComplete=""
                                 {...field}
@@ -203,13 +239,14 @@ function DynamicForm() {
                               name={`rows[${index}].quantity`}
                               control={control}
                               rules={{
-                                required: 'Quantity is required', pattern: {
+                                required: "Quantity is required",
+                                pattern: {
                                   value: /^[1-9]\d*$/, // Pattern to accept positive integers
-                                  message: 'Please enter a valid quantity'
-                                }
+                                  message: "Please enter a valid quantity",
+                                },
                               }}
                               render={({ field, fieldState }) => (
-                                <>
+                                <div>
                                   <TextField
                                     label="Quantity"
                                     type="number"
@@ -218,10 +255,19 @@ function DynamicForm() {
                                     autoComplete=""
                                     {...field}
                                   />
-                                  {fieldState.error && <p style={{ color: 'red' }}>{fieldState.error.message}</p>}</>
+                                  {fieldState.error && (
+                                    <p
+                                      style={{
+                                        color: "red",
+                                        paddingTop: "2px",
+                                      }}
+                                    >
+                                      {fieldState.error.message}
+                                    </p>
+                                  )}
+                                </div>
                               )}
                             />
-
                           </Box>
                           <Controller
                             name={`rows[${index}].discountType`}
@@ -229,7 +275,7 @@ function DynamicForm() {
                             render={({ field }) => (
                               <Select
                                 requiredIndicator={false}
-                                label="Select Option"
+                                label="Discoount Type"
                                 options={[
                                   { label: "None", value: "none" },
                                   { label: "% discount", value: "discount" },
@@ -239,26 +285,43 @@ function DynamicForm() {
                               />
                             )}
                           />
-                          {
-                            watch(`rows[${index}].discountType`) !== 'none' ? (                          <Controller
+                          {watch(`rows[${index}].discountType`) !== "none" ? (
+                            <Controller
                               name={`rows[${index}].amount`}
                               control={control}
-                              rules={{ required: 'Amount is required', pattern: { value: /^\d+(\.\d{1,2})?$/, message: 'Please enter a valid amount' } }}
+                              rules={{
+                                required: "Amount is required",
+                                pattern: {
+                                  value: /^\d+(\.\d{1,2})?$/,
+                                  message: "Please enter a valid amount",
+                                },
+                              }}
                               render={({ field, fieldState }) => (
-                                <>
+                                <div>
                                   <TextField
                                     label="Amount"
                                     type="number"
                                     placeholder="Enter Amount"
                                     autoComplete=""
-                                    suffix={watch(`rows[${index}].discountType`) === 'discount' ? '%' : '$'}
+                                    suffix={
+                                      watch(`rows[${index}].discountType`) ===
+                                      "discount"
+                                        ? "%"
+                                        : "$"
+                                    }
                                     {...field}
                                   />
-                                  {fieldState.error && <p style={{ color: 'red' }}>{fieldState.error.message}</p>}
-                                </>
+                                  {fieldState.error && (
+                                    <p style={{ color: "red", paddingTop: '2px' }}>
+                                      {fieldState.error.message}
+                                    </p>
+                                  )}
+                                </div>
                               )}
-                            />) : ''
-                          }
+                            />
+                          ) : (
+                            ""
+                          )}
                         </div>
                       </div>
                     </div>
@@ -267,10 +330,14 @@ function DynamicForm() {
               </div>
               <div className={style.footer}>
                 <div className={style.btn1}>
-                  <Button icon={PlusCircleIcon} onClick={() => append({})}>Add Option</Button>
+                  <Button icon={PlusCircleIcon} onClick={() => append({})}>
+                    Add Option
+                  </Button>
                 </div>
                 <div className={style.btn2}>
-                  <Button submit icon={CheckCircleIcon}>Submit</Button>
+                  <Button submit icon={CheckCircleIcon}>
+                    Submit
+                  </Button>
                 </div>
               </div>
             </div>
@@ -293,25 +360,32 @@ function DynamicForm() {
               <div className={style.tableDetail}>
                 <DataTable
                   columnContentTypes={[
-                    'text',
-                    'text',
-                    'text',
-                    'text',
-                    'numeric',
-                    'numeric',
+                    "text",
+                    "text",
+                    "text",
+                    "text",
+                    "numeric",
+                    "numeric",
                   ]}
                   headings={[
-                    'Title',
-                    'Sub Title',
-                    'Label',
-                    'Quantity',
-                    'Discount Type',
-                    'Amount',
+                    "Title",
+                    "Sub Title",
+                    "Label",
+                    "Quantity",
+                    "Discount Type",
+                    "Amount",
                   ]}
                   initialSortColumnIndex={4}
                   hasZebraStripingOnData
                   increasedTableDensity
-                  rows={list}
+                  rows={list.map((row: any[]) => [
+                    row[0],
+                    row[1],
+                    row[2],
+                    row[3],
+                    row[4],
+                    formatAmount(row[5], row[4]),
+                  ])}
                 />
               </div>
             </div>
